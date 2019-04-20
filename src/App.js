@@ -14,7 +14,8 @@ class App extends React.Component {
   render() {
     return React.createElement("div", {}, [
       React.createElement(
-        "h1", {
+        "h1",
+        {
           onClick: this.handleTitleClick
         },
         "Adopt Me!"
