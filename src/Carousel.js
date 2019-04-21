@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { Component } from "react";
 
 class Carousel extends Component {
@@ -13,6 +14,11 @@ class Carousel extends Component {
     }
     return { photos };
   }
+  handleIndexClick = event => {
+    this.setState({
+      active: +event.target.dataset.index
+    });
+  };
   render() {
     const { photos, active } = this.state;
     return (
@@ -20,8 +26,12 @@ class Carousel extends Component {
         <img src={photos[active].value} alt="primary animal" />
         <div className="carousel-smaller">
           {photos.map((photo, index) => (
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <img
+              /* eslint-disable-next-line */
+              onClick={this.handleIndexClick}
               key={photo.value}
+              data-index={index}
               src={photo.value}
               className={index === active ? "active" : ""}
               alt="animal thumbnail"
