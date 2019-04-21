@@ -49205,9 +49205,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+var _petfinderClient = _interopRequireDefault(require("petfinder-client"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -49227,30 +49229,90 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+var petfinder = (0, _petfinderClient.default)({
+  key: "eRZloGyAAKvzXJDRLowINyppgOs8A6Qn1f8muW3qKFr4FxXLj8",
+  secret: "Xezv684YXwU4ZYtfdbSHxeehXhFIyqa27T3BwDoU"
+});
+
 var Details =
 /*#__PURE__*/
-function (_Component) {
-  _inherits(Details, _Component);
+function (_React$Component) {
+  _inherits(Details, _React$Component);
 
   function Details() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    var _temp;
+
     _classCallCheck(this, Details);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Details).apply(this, arguments));
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Details)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.state = {
+      loading: true
+    }, _temp));
   }
 
   _createClass(Details, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      petfinder.pet.get({
+        output: "full",
+        id: this.props.id
+      }).then(function (data) {
+        var breed;
+
+        if (Array.isArray(data.petfinder.pet.breeds.breed)) {
+          breed = data.petfinder.pet.breeds.breed.join(", ");
+        } else {
+          breed = data.petfinder.pet.breeds.breed;
+        }
+
+        _this2.setState({
+          name: data.petfinder.pet.name,
+          animal: data.petfinder.pet.animal,
+          location: "".concat(data.petfinder.pet.contact.city, ", ").concat(data.petfinder.pet.contact.state),
+          description: data.petfinder.pet.description,
+          media: data.petfinder.pet.media,
+          breed: breed,
+          loading: false
+        });
+      }).catch(function (err) {
+        return _this2.setState({
+          error: err
+        });
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      return _react.default.createElement("h1", null, "hi lol");
+      if (this.state.loading) {
+        return _react.default.createElement("h1", null, "loading \u2026 ");
+      }
+
+      var _this$state = this.state,
+          animal = _this$state.animal,
+          breed = _this$state.breed,
+          location = _this$state.location,
+          description = _this$state.description;
+      return _react.default.createElement("div", {
+        className: "details"
+      }, _react.default.createElement("div", null, _react.default.createElement("h1", null, name), _react.default.createElement("h2", null, "".concat(animal, " \u2014 ").concat(breed, " \u2014 ").concat(location)), _react.default.createElement("p", null, description)));
     }
   }]);
 
   return Details;
-}(_react.Component);
+}(_react.default.Component);
 
 var _default = Details;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","petfinder-client":"../node_modules/petfinder-client/index.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireWildcard(require("react"));
@@ -49341,7 +49403,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52307" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57828" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
